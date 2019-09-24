@@ -11,8 +11,8 @@
 	</parent>
 
 	<artifactId>commons-util</artifactId>
-	<name>${project.artifactId}</name>
-	<description>common-utils</description>
+	<name>commons-util</name>
+	<description>commons-util</description>
 	<packaging>jar</packaging>
 
 	<properties>
