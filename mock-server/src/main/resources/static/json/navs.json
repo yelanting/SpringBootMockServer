@@ -7,9 +7,15 @@
 			"spread": false,
 			"children": [
 				{
-					"title": "Dubbo接口测试",
+					"title": "应用管理",
 					"icon": "&#xe630;",
-					"href": "userDefined/dubboTest/listDubboTest.html",
+					"href": "userDefined/application/listApplication.html",
+					"spread": false
+				},
+				{
+					"title": "mockApi管理",
+					"icon": "&#xe630;",
+					"href": "userDefined/mockApi/listMockApi.html",
 					"spread": false
 				}
 			]
