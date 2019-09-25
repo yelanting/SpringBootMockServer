@@ -21,11 +21,11 @@ layui.use(['laypage', 'layer', 'table', 'element', 'form'], function () {
 	/**
 	 * 获取所有数据
 	 */
-	function getGlobalParamList() {
-		var getGlobalParamListUrl = '/globalParam/getList';
+	function getMockApiList() {
+		var getMockApiListUrl = '/mockApi/getList';
 		var resultData = "";
 		$.ajax({
-			url: getGlobalParamListUrl,
+			url: getMockApiListUrl,
 			async: false,
 			method: "get",
 			dataType: "json",
@@ -39,14 +39,14 @@ layui.use(['laypage', 'layer', 'table', 'element', 'form'], function () {
 	/**
 	 * 条件搜索
 	 */
-	function getGlobalParamListWithCondition(searchContent) {
+	function getMockApiListWithCondition(searchContent) {
 		if (searchContent == "undefined" || searchContent == "") {
-			return getGlobalParamList();
+			return getMockApiList();
 		} else {
 			var resultData = "",
 			postData = {};
 			$.ajax({
-				url: "/globalParam/searchList?searchContent=" + searchContent,
+				url: "/mockApi/searchList?searchContent=" + searchContent,
 				method: "get",
 				data: postData,
 				async: false,
@@ -62,23 +62,23 @@ layui.use(['laypage', 'layer', 'table', 'element', 'form'], function () {
 	/**
 	 * 刷新表格
 	 */
-	function renderGlobalParamTableDefault() {
+	function renderMockApiTableDefault() {
 		var searchContent = "";
-		var globalParamListData = getGlobalParamListWithCondition(searchContent);
-		table.reload("globalParamListTable", {
+		var mockApiListData = getMockApiListWithCondition(searchContent);
+		table.reload("mockApiListTable", {
 			page: {
 				curr: 1
 			},
-			data: globalParamListData.data
+			data: mockApiListData.data
 		})
 	}
 
 	// 执行一个 table 实例
 	table.render({
-		elem: '#globalParamListTable',
+		elem: '#mockApiListTable',
 		height: 400,
 		// 数据接口
-		//        url : "/globalParam/getList/",
+		//        url : "/mockApi/getList/",
 		//        method:"get",
 		// 表头
 		title: '全局参数列表',
@@ -144,36 +144,36 @@ layui.use(['laypage', 'layer', 'table', 'element', 'form'], function () {
 					width: '40%'
 				}
 			]],
-		data: getGlobalParamList().data
+		data: getMockApiList().data
 	});
 
 	// 监听头工具栏事件,批量删除操作
 	$('#deleteInBatch').click(function () {
-		var checkStatus = table.checkStatus('globalParamListTable');
+		var checkStatus = table.checkStatus('mockApiListTable');
 		var data = checkStatus.data;
 		console.log(data);
-		var globalParamId = [];
+		var mockApiId = [];
 		if (data.length > 0) {
 			for (var eachDataIndex in data) {
-				globalParamId.push(data[eachDataIndex].id);
+				mockApiId.push(data[eachDataIndex].id);
 			}
 
 			layer.confirm('确定删除选中的数据吗？', {
 				icon: 3,
 				title: '提示信息'
 			}, function (index) {
-				var url = "/globalParam/deleteGlobalParamInBatch";
+				var url = "/mockApi/deleteMockApiInBatch";
 
 				var postData = {
-					"ids": globalParamId
+					"ids": mockApiId
 				};
 
 				$.post(url, postData, function (responseData) {
 					if (responseData.success == "true" || responseData.success) {
 						setTimeout(function () {
 							top.layer.msg("批量删除成功！");
-							//                            globalParamTable.reload();
-							renderGlobalParamTableDefault()
+							//                            mockApiTable.reload();
+							renderMockApiTableDefault()
 							layer.close(index);
 						}, 500);
 					} else {
@@ -188,12 +188,12 @@ layui.use(['laypage', 'layer', 'table', 'element', 'form'], function () {
 	});
 
 	// 添加全局参数
-	function addGlobalParam() {
+	function addMockApi() {
 		layui.layer.open({
 			title: "添加全局参数",
 			type: 2,
 			area: [widthPercent, heightPercent],
-			content: "addGlobalParam.html",
+			content: "addMockApi.html",
 			success: function (layero, index) {
 				setTimeout(function () {
 					layui.layer.tips('点击此处返回列表', '.layui-layer-setwin .layui-layer-close', {
@@ -205,13 +205,13 @@ layui.use(['laypage', 'layer', 'table', 'element', 'form'], function () {
 	}
 
 	// 编辑全局参数
-	function editGlobalParam(edit) {
+	function editMockApi(edit) {
 		console.log(edit)
 		layui.layer.open({
 			title: "修改全局参数",
 			type: 2,
 			area: [widthPercent, heightPercent],
-			content: "editGlobalParam.html",
+			content: "editMockApi.html",
 			success: function (layero, index) {
 				var body = layui.layer.getChildFrame('body', index);
 				body.find("#id").val(edit.id);
@@ -232,12 +232,12 @@ layui.use(['laypage', 'layer', 'table', 'element', 'form'], function () {
 	}
 
 	// 查看全局参数
-	function viewGlobalParam(edit) {
+	function viewMockApi(edit) {
 		layui.layer.open({
 			title: "查看全局参数",
 			type: 2,
 			area: [widthPercent, heightPercent],
-			content: "viewGlobalParam.html",
+			content: "viewMockApi.html",
 			success: function (layero, index) {
 				var body = layui.layer.getChildFrame('body', index);
 				body.find("#id").val(edit.id);
@@ -256,31 +256,31 @@ layui.use(['laypage', 'layer', 'table', 'element', 'form'], function () {
 		});
 	}
 
-	$("#addGlobalParam_btn").click(function () {
-		addGlobalParam();
+	$("#addMockApi_btn").click(function () {
+		addMockApi();
 	});
 
 	// 搜索全局参数
 	// 搜索【此功能需要后台配合，所以暂时没有动态效果演示】
-	$("#searchGlobalParam").on("click", function () {
-		var searchContent = $("#serachGlobalParamContent").val();
-		var globalParamListData = getGlobalParamListWithCondition(searchContent);
+	$("#searchMockApi").on("click", function () {
+		var searchContent = $("#serachMockApiContent").val();
+		var mockApiListData = getMockApiListWithCondition(searchContent);
 		//搜索完之后清空搜索数据
-		$("#serachGlobalParamContent").val("")
+		$("#serachMockApiContent").val("")
 		//表格重载
-		table.reload("globalParamListTable", {
-			data: globalParamListData.data
+		table.reload("mockApiListTable", {
+			data: mockApiListData.data
 		});
 	});
 
 	//刷新功能
-	$("#refreshGlobalParamList").on("click", function () {
-		$("#serachGlobalParamContent").val("");
-		renderGlobalParamTableDefault();
+	$("#refreshMockApiList").on("click", function () {
+		$("#serachMockApiContent").val("");
+		renderMockApiTableDefault();
 	});
 
 	// 监听行工具事件
-	table.on('tool(globalParamListTable)', function (obj) {
+	table.on('tool(mockApiListTable)', function (obj) {
 		// 注：tool
 		// 是工具条事件名，test 是
 		// table 原始容器的属性
@@ -292,10 +292,10 @@ layui.use(['laypage', 'layer', 'table', 'element', 'form'], function () {
 		console.log(obj);
 		// 获得 lay-event 对应的值
 		if (layEvent === 'detail') {
-			viewGlobalParam(data);
+			viewMockApi(data);
 		} else if (layEvent === 'del') {
 			layer.confirm('真的删除行么', function (index) {
-				var url = "/globalParam/deleteGlobalParam";
+				var url = "/mockApi/deleteMockApi";
 				var postData = {
 					"id": data.id
 				};
@@ -303,7 +303,7 @@ layui.use(['laypage', 'layer', 'table', 'element', 'form'], function () {
 					if (responseData.success == "true" || responseData.success) {
 						layer.msg('删除成功！');
 						obj.del();
-						renderGlobalParamTableDefault();
+						renderMockApiTableDefault();
 						// 删除对应行（tr）的DOM结构
 					} else {
 						layer.msg('删除失败：' + responseData.msg);
@@ -313,14 +313,14 @@ layui.use(['laypage', 'layer', 'table', 'element', 'form'], function () {
 				// 向服务端发送删除指令
 			});
 		} else if (layEvent === 'edit') {
-			editGlobalParam(data);
+			editMockApi(data);
 		}
 	});
 
 	/**
 	 *
 	 */
-	table.on('rowDouble(globalParamListTable)', function (obj) {
+	table.on('rowDouble(mockApiListTable)', function (obj) {
 		layer.msg("你想干啥！别瞎点好不好", {
 			time: 300
 		});

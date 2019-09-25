@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.tianque.mock.server.mapper.ApplicationInfoMapper">
+	<resultMap id="BaseResultMap"
+		type="com.tianque.mock.server.model.ApplicationInfo">
+		<id column="id" jdbcType="BIGINT" javaType="java.lang.Long"
+			property="id" />
+		<result column="app_name" jdbcType="VARCHAR" property="appName" />
+		<result column="app_ename" jdbcType="VARCHAR"
+			property="appEname" />
+		<result column="base_url" jdbcType="VARCHAR" property="baseUrl" />
+		<result column="app_code" jdbcType="VARCHAR" property="appCode" />
+		<result column="description" jdbcType="VARCHAR"
+			property="description" />
+		<result column="default_app" jdbcType="TINYINT"
+			property="defaultApp" />
+		<result column="create_date" jdbcType="TIMESTAMP"
+			property="createDate" />
+		<result column="update_date" jdbcType="TIMESTAMP"
+			property="updateDate" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,
+		app_name,
+		app_ename,
+		base_url,
+		app_code,
+		description,
+		default_app,
+		create_date,
+		update_date
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_application_info
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="findApplicationInfoByAppEname"
+		parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_application_info
+		where app_ename = #{appEname}
+	</select>
+	<select id="findOtherApplicationInfosByObject"
+		parameterType="com.tianque.mock.server.model.ApplicationInfo"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_application_info
+		where app_name = #{appName} and id not
+		in(#{id})
+	</select>
+
+	<select id="findApplicationInfosByAppEnameLike"
+		parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_application_info
+		where app_ename like CONCAT(#{appEname},
+		'%')
+	</select>
+
+	<select id="findApplicationInfosByAppEnameOrNameLike"
+		parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_application_info
+		where app_name like
+		CONCAT(#{searchContent},'%') or app_ename like
+		CONCAT(#{searchContent},'%')
+	</select>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_application_info
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		tb_application_info
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<delete id="deleteByIds" parameterType="java.lang.Long">
+		delete from
+		tb_application_info
+		where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id,jdbcType=BIGINT}
+		</foreach>
+	</delete>
+	<update id="updateByPrimaryKey"
+		parameterType="com.tianque.mock.server.model.ApplicationInfo">
+		update tb_application_info
+		<set>
+			<if test="appName != null">
+				app_name = #{appName,jdbcType=VARCHAR},
+			</if>
+			<if test="appEname != null">
+				app_ename = #{appEname,jdbcType=VARCHAR},
+			</if>
+			<if test="appCode != null">
+				app_code = #{appCode,jdbcType=VARCHAR},
+			</if>
+			description =
+			#{description,jdbcType=VARCHAR},
+			default_app=#{defaultApp ,jdbcType=TINYINT},
+			base_url =
+			#{baseUrl,jdbcType=VARCHAR},
+			update_date =
+			CURRENT_TIMESTAMP()
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true"
+		parameterType="com.tianque.mock.server.model.ApplicationInfo">
+		<selectKey keyProperty="id" resultType="long">
+			select
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into tb_application_info ( app_name, app_code,
+		description,
+		default_app,
+		app_ename,
+		base_url,
+		create_date, update_date ) values
+		(#{appName,jdbcType=VARCHAR},
+		#{appCode,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		default_app=#{defaultApp
+		,jdbcType=TINYINT},
+		#{appEname,jdbcType=VARCHAR},
+		#{baseUrl
+		,jdbcType=VARCHAR},
+		CURRENT_TIMESTAMP(),
+		#{updateDate,jdbcType=VARCHAR}
+		)
+	</insert>
+</mapper>

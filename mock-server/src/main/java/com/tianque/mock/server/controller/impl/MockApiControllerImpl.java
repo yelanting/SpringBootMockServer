@@ -11,14 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tianque.commons.util.ResponseData;
-import com.tianque.mock.server.model.GlobalParam;
-import com.tianque.mock.server.service.GlobalParamService;
+import com.tianque.mock.server.model.MockApi;
+import com.tianque.mock.server.service.MockApiService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,21 +32,20 @@ import io.swagger.annotations.ApiResponses;
  * @see :
  */
 @Controller
-@Api("全局参数配置相关API")
-@RequestMapping("/globalParam")
-public class GlobalParamConfigControllerImpl {
+@Api("应用信息相关API")
+@RequestMapping("/mockApi")
+public class MockApiControllerImpl {
 	@Autowired
-	private GlobalParamService globalParamService;
+	private MockApiService mockApiService;
 
 	@GetMapping(value = "/getList")
 	@ResponseBody
-	@ApiOperation(value = "查询全局参数列表")
+	@ApiOperation(value = "查询应用信息列表")
 	@ApiResponses({ @ApiResponse(code = 400, message = "请求参数没有填好"),
 	        @ApiResponse(code = 404, message = "页面查找失败，路径不对") })
 	public ResponseData getList() {
-		List<GlobalParam> globalParamList = globalParamService.getList();
-		return ResponseData.getSuccessResult(globalParamList,
-		        globalParamList.size());
+		List<MockApi> mockApiList = mockApiService.getList();
+		return ResponseData.getSuccessResult(mockApiList, mockApiList.size());
 	}
 
 	/**
@@ -59,69 +59,65 @@ public class GlobalParamConfigControllerImpl {
 	 */
 	@GetMapping(value = "/searchList")
 	@ResponseBody
-	@ApiOperation(value = "根据key名称查询全局参数")
+	@ApiOperation(value = "根据key名称查询应用信息")
 	@ApiResponses({ @ApiResponse(code = 400, message = "请求参数没有填好"),
 	        @ApiResponse(code = 404, message = "页面查找失败，路径不对") })
 	public ResponseData searchList(
 	        @RequestParam("searchContent") String searchContent) {
-		List<GlobalParam> globalParamPage = globalParamService
-		        .searchGlobalParamsBySearchContent(searchContent);
-		return ResponseData.getSuccessResult(globalParamPage,
-		        globalParamPage.size());
+		List<MockApi> mockApiPage = mockApiService
+		        .searchMockApisBySearchContent(searchContent);
+		return ResponseData.getSuccessResult(mockApiPage, mockApiPage.size());
 	}
 
 	/**
-	 * 添加全局参数
+	 * 添加应用信息
 	 * 
 	 * @see :
 	 * @param :
 	 * @return : ResponseData
-	 * @param globalParam
+	 * @param mockApi
 	 */
-	@PostMapping(value = "/addGlobalParam")
-	@ApiOperation(value = "添加全局参数")
+	@PostMapping(value = "/addMockApi")
+	@ApiOperation(value = "添加应用信息")
 	@ResponseBody
-	public ResponseData addGlobalParam(
-	        @ModelAttribute GlobalParam globalParam) {
-		return ResponseData.getSuccessResult(
-		        globalParamService.addGlobalParam(globalParam));
+	public ResponseData addMockApi(@ModelAttribute MockApi mockApi) {
+		return ResponseData
+		        .getSuccessResult(mockApiService.addMockApi(mockApi));
 	}
 
 	/**
-	 * 更新全局参数
+	 * 更新应用信息
 	 * 
 	 * @see :
 	 * @param :
 	 * @return : ResponseData
-	 * @param globalParam
+	 * @param mockApi
 	 */
-	@PostMapping(value = "/updateGlobalParam")
-	@ApiOperation(value = "修改全局参数")
+	@PostMapping(value = "/updateMockApi")
+	@ApiOperation(value = "修改应用信息")
 	@ResponseBody
-	public ResponseData updateGlobalParam(
-	        @ModelAttribute GlobalParam globalParam) {
-		return ResponseData.getSuccessResult(
-		        globalParamService.updateGlobalParam(globalParam));
+	public ResponseData updateMockApi(@ModelAttribute MockApi mockApi) {
+		return ResponseData
+		        .getSuccessResult(mockApiService.updateMockApi(mockApi));
 	}
 
 	/**
-	 * 删除全局参数-单个
+	 * 删除应用信息-单个
 	 * 
 	 * @see :
 	 * @param :
 	 * @return : ResponseData
 	 * @param id
 	 */
-	@PostMapping(value = "/deleteGlobalParam")
-	@ApiOperation(value = "删除全局参数")
+	@PostMapping(value = "/deleteMockApi")
+	@ApiOperation(value = "删除应用信息")
 	@ResponseBody
-	public ResponseData deleteGlobalParam(@RequestParam("id") Long id) {
-		return ResponseData
-		        .getSuccessResult(globalParamService.deleteGlobalParam(id));
+	public ResponseData deleteMockApi(@RequestParam("id") Long id) {
+		return ResponseData.getSuccessResult(mockApiService.deleteMockApi(id));
 	}
 
 	/**
-	 * 批量删除全局参数
+	 * 批量删除应用信息
 	 * 
 	 * @see :
 	 * @param :
@@ -129,12 +125,28 @@ public class GlobalParamConfigControllerImpl {
 	 * @param ids
 	 * @return
 	 */
-	@PostMapping(value = "/deleteGlobalParamInBatch")
-	@ApiOperation(value = "批量删除全局参数")
+	@PostMapping(value = "/deleteMockApiInBatch")
+	@ApiOperation(value = "批量删除应用信息")
 	@ResponseBody
-	public ResponseData deleteGlobalParamInBatch(
+	public ResponseData deleteMockApiInBatch(
 	        @RequestParam("ids[]") Long[] ids) {
-		globalParamService.deleteGlobalParam(ids);
+		mockApiService.deleteMockApi(ids);
 		return ResponseData.getSuccessResult(ids);
+	}
+
+	/**
+	 * 获取详情
+	 * 
+	 * @see :
+	 * @param :
+	 * @return : ResponseData
+	 * @param codeCoverage
+	 */
+	@GetMapping(value = "/getDetail/{id}")
+	@ApiOperation(value = "查询详情")
+	@ResponseBody
+	public ResponseData getDetail(@PathVariable Long id) {
+		return ResponseData
+		        .getSuccessResult(mockApiService.selectByPrimaryKey(id));
 	}
 }

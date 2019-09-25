@@ -3,7 +3,7 @@
  * @since : 2018年9月7日 下午2:21:00
  * @see:
  */
-package com.tianque.commons.util;
+package com.tianque.commons.util.core.base;
 
 import java.util.Arrays;
 

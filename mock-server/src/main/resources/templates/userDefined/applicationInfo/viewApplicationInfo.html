@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>查看注册执行机</title>
+<title>查看应用信息</title>
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport"
@@ -14,38 +14,36 @@
 <link rel="stylesheet" href="/css/public.css" media="all" />
 </head>
 <body>
-	<form id="addExecutorAgentForm" class="layui-form layui-form-pane"
+	<form id="addApplicationInfoForm" class="layui-form layui-form-pane"
 		method="post">
 		<div class="layui-form-item">
-			<label class="layui-form-label">执行机名称</label>
+			<label class="layui-form-label">应用名称</label>
 			<div class="layui-input-block">
-				<input type="text" id="executorName" name="executorName"
-					class="layui-input executorName" lay-verify="executorName"
+				<input type="text" id="appName" name="appName"
+					class="layui-input appName" lay-verify="appName"
 					placeholder="暂无数据" disabled>
 			</div>
 		</div>
-
 		<div class="layui-form-item layui-form">
-			<label class="layui-form-label">执行机IP</label>
+			<label class="layui-form-label">英文名称</label>
 			<div class="layui-input-block">
-				<input type="text" id="executorIp" name="executorIp"
-					class="layui-input executorIp" placeholder="暂无数据" disabled />
+				<input type="text" id="appEname" name="appEname"
+					class="layui-input appEname" placeholder="暂无数据" disabled />
 			</div>
 		</div>
-
-		<div class="layui-form-item layui-form">
-			<label class="layui-form-label">是否离线</label>
-			<div class="layui-input-block">
-				<input type="text" id="offline" name="offline"
-					class="layui-input offline" placeholder="暂无数据" disabled />
-			</div>
-		</div>
-
 		<div class="layui-form-item">
-			<label class="layui-form-label">是否空闲</label>
+			<label class="layui-form-label">基础Path</label>
 			<div class="layui-input-block">
-				<input type="text" id="idle" name="idle" class="layui-input offline"
+				<input type="text" id="baseUrl" name="baseUrl" class="layui-input baseUrl"
 					placeholder="暂无数据" disabled>
+			</div>
+		</div>
+
+		<div class="layui-form-item layui-form">
+			<label class="layui-form-label">应用编码</label>
+			<div class="layui-input-block">
+				<input type="text" id="appCode" name="appCode"
+					class="layui-input appCode" placeholder="暂无数据" disabled />
 			</div>
 		</div>
 
@@ -62,6 +60,14 @@
 			<div class="layui-input-block">
 				<input type="text" id="updateDate" name="updateDate"
 					class="layui-input updateDate" placeholder="暂无数据" disabled />
+			</div>
+		</div>
+		
+		<div class="layui-form-item" style="display: block">
+			<label class="layui-form-label">备注</label>
+			<div class="layui-input-block">
+				<input type="textarea" id="description" name="description"
+					class="layui-input description" placeholder="暂无数据" disabled />
 			</div>
 		</div>
 	</form>

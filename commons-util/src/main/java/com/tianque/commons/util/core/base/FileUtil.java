@@ -3,7 +3,7 @@
  * @since : 2018年9月11日 下午2:54:26
  * @see:
  */
-package com.tianque.commons.util;
+package com.tianque.commons.util.core.base;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

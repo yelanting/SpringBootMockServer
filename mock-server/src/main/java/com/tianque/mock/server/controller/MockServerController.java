@@ -14,19 +14,5 @@ import com.tianque.mock.server.vo.ResponseData;
  * @see :
  */
 public interface MockServerController {
-    ResponseData mockPost(MockParamDTO mockParamDTO);
-
-    // ResponseData mockGet(MockParamDTO mockParamDTO);
-    //
-    // ResponseData mockDelete(MockParamDTO mockParamDTO);
-    //
-    // ResponseData mockPatch(MockParamDTO mockParamDTO);
-    //
-    // ResponseData mockTrace(MockParamDTO mockParamDTO);
-    //
-    // ResponseData mockHead(MockParamDTO mockParamDTO);
-    //
-    // ResponseData mockOptions(MockParamDTO mockParamDTO);
-    //
-    // ResponseData mock(MockParamDTO mockParamDTO);
+	ResponseData mockPost(MockParamDTO mockParamDTO);
 }

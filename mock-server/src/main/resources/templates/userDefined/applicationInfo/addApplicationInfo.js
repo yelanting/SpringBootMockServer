@@ -1,38 +1,47 @@
 layui.use([
 		'form', 'layer', 'layedit', 'laydate', 'upload'
 ], function() {
-	var form = layui.form
-	layer = parent.layer === undefined ? layui.layer : top.layer,
-			laypage = layui.laypage, upload = layui.upload,
-			layedit = layui.layedit, laydate = layui.laydate, $ = layui.jquery;
+	var form = layui.form;
+	var layer = (parent.layer === undefined ? layui.layer : top.layer);
+	
+	var	laypage = layui.laypage;
+	var upload = layui.upload;
+	var	layedit = layui.layedit;
+	var laydate = layui.laydate;
+	var $ = layui.jquery;
 
 	form.verify({
-		paramKey : function(val) {
-			var inputName = "参数Key"
+		appName : function(val) {
+			var inputName = "应用名称"
 			return checkInputEmpty(val, inputName)
 					|| checkInputLength(val, null, 50, inputName)
 		},
 
-		paramValue : function(val) {
-			var inputName =  "参数值";
+		appEname : function(val) {
+			var inputName =  "英文名称";
 			return checkInputEmpty(val, inputName) ||checkInputLength(val, null, 500,inputName)
 		},
 		
-		paramComment : function(val) {
-			return checkInputLength(val, null, 500, "参数描述")
+		baseUrl : function(val) {
+			var inputName = "基础路径";
+			return checkInputEmpty(val , inputName)  ||checkInputLength(val, null, 500,inputName)
+		},
+		
+		description : function(val) {
+			return checkInputLength(val, null, 100, "备注")
 		},
 	});
 
-	form.on("submit(addMockApiSubmit)", function(data) {
+	form.on("submit(addApplicationInfoSubmit)", function(data) {
 		// 弹出loading
 		var index = top.layer.msg('数据提交中，请稍候', {
 			icon : 16, time : false, shade : 0.8
 		});
 		
-		var postData = $("#addMockApi").serialize();
+		var postData = $("#addApplicationInfo").serialize();
 
 		// 实际使用时的提交信息
-		$.post("/mockApi/addMockApi", postData, function(response) {
+		$.post("/applicationInfo/addApplicationInfo", postData, function(response) {
 			if (response.success == "false" || !response.success) {
 				if (response.msg != "null") {
 					top.layer.msg("添加失败:" + response.msg);

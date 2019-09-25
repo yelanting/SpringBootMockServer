@@ -14,7 +14,7 @@ import javax.persistence.Id;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.tianque.commons.util.CalendarUtil;
+import com.tianque.commons.util.core.base.CalendarUtil;
 
 /**
  * @author : Administrator

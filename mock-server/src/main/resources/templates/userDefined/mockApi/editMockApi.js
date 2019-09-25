@@ -23,16 +23,16 @@ layui.use([
 		},
 	});
 
-	form.on("submit(editGlobalParamSubmit)", function(data) {
+	form.on("submit(editMockApiSubmit)", function(data) {
 		// 弹出loading
 		var index = top.layer.msg('数据提交中，请稍候', {
 			icon : 16, time : false, shade : 0.8
 		});
 		
-		var postData = $("#editGlobalParamForm").serialize();
+		var postData = $("#editMockApiForm").serialize();
 		
 		// 实际使用时的提交信息
-		$.post("/globalParam/updateGlobalParam", postData, function(response) {
+		$.post("/mockApi/updateMockApi", postData, function(response) {
 			if (response.success == "false" || !response.success) {
 				if (response.msg != "null") {
 					top.layer.msg("修改失败:" + response.msg);

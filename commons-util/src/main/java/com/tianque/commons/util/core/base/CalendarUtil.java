@@ -3,7 +3,7 @@
  * @since : 2018年9月11日 下午2:53:13
  * @see:
  */
-package com.tianque.commons.util;
+package com.tianque.commons.util.core.base;
 
 /**
  * @author : Administrator

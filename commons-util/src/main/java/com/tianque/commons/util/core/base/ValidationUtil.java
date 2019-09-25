@@ -3,11 +3,12 @@
  * @since : 2018年9月11日 下午2:59:24
  * @see:
  */
-package com.tianque.commons.util;
+package com.tianque.commons.util.core.base;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.tianque.commons.util.GlobalExceptionMessage;
 import com.tianque.commons.util.exception.base.BusinessValidationException;
 
 /**

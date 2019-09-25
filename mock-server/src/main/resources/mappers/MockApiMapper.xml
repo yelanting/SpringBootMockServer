@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tianque.mock.server.mapper.MockApiMapper">
+	<resultMap id="BaseResultMap"
+		type="com.tianque.mock.server.model.MockApi">
+		<id column="id" jdbcType="BIGINT" javaType="java.lang.Long"
+			property="id" />
+		<result column="api_name" jdbcType="VARCHAR" property="apiName" />
+		<result column="api_path" jdbcType="VARCHAR" property="apiPath" />
+		<result column="api_params" jdbcType="VARCHAR"
+			property="apiParams" />
+		<result column="request_method_type" jdbcType="VARCHAR"
+			property="requestMethodType" />
+		<result column="request_mime_type" jdbcType="VARCHAR"
+			property="requestMimeType" />
+		<result column="expected_response" jdbcType="VARCHAR"
+			property="expectedResponse" />
+		<result column="description" jdbcType="VARCHAR"
+			property="description" />
+		<result column="create_date" jdbcType="TIMESTAMP"
+			property="createDate" />
+		<result column="update_date" jdbcType="TIMESTAMP"
+			property="updateDate" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,
+		api_name,
+		api_path,
+		api_params,
+		request_method_type,
+		request_mime_type,
+		expected_response,
+		description,
+		create_date,
+		update_date
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_mock_api
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="findMockApiByApiPath"
+		parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_mock_api
+		where api_name = #{apiName}
+	</select>
+	<select id="findOtherMockApisByObject"
+		parameterType="com.tianque.mock.server.model.MockApi"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_mock_api
+		where api_name = #{apiName} and id not
+		in(#{id})
+	</select>
+
+	<select id="findMockApisByApiPathLike"
+		parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_mock_api
+		where api_path like CONCAT(#{apiPath},
+		'%')
+	</select>
+
+	<select id="findMockApisByApiPathOrNameLike"
+		parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_mock_api
+		where api_name like
+		CONCAT(#{searchContent},'%') or
+		api_path like
+		CONCAT(#{searchContent},'%')
+	</select>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_mock_api
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		tb_mock_api
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<delete id="deleteByIds" parameterType="java.lang.Long">
+		delete from
+		tb_mock_api
+		where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id,jdbcType=BIGINT}
+		</foreach>
+	</delete>
+	<update id="updateByPrimaryKey"
+		parameterType="com.tianque.mock.server.model.MockApi">
+		update tb_mock_api
+		<set>
+			<if test="apiName != null">
+				api_name = #{apiName,jdbcType=VARCHAR},
+			</if>
+			<if test="apiPath != null">
+				api_path = #{apiPath,jdbcType=VARCHAR},
+			</if>
+			<if test="requestMethodType != null">
+				request_method_type =
+				#{requestMethodType,jdbcType=VARCHAR},
+			</if>
+			description =
+			#{description,jdbcType=VARCHAR},
+			api_params =
+			#{apiParams,jdbcType=VARCHAR},
+			request_mime_type=
+			#{requestMimeType,jdbcType=VARCHAR},
+			expected_response=
+			#{expectedResponse,jdbcType=VARCHAR},
+			update_date =
+			CURRENT_TIMESTAMP()
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true"
+		parameterType="com.tianque.mock.server.model.MockApi">
+		<selectKey keyProperty="id" resultType="long">
+			select
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into tb_mock_api ( api_name,
+		request_method_type,request_mime_type
+		description,
+		api_path,
+		api_params,
+		expected_response,
+		create_date, update_date ) values
+		(#{apiName,jdbcType=VARCHAR},
+		#{requestMethodType,jdbcType=VARCHAR},
+		#{requestMimeType,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		#{apiPath,jdbcType=VARCHAR},
+		#{apiParams ,jdbcType=VARCHAR},
+		#{expectedResponse ,jdbcType=VARCHAR},
+		CURRENT_TIMESTAMP(),
+		#{updateDate,jdbcType=VARCHAR} )
+	</insert>
+</mapper>
