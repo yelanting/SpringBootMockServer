@@ -15,7 +15,7 @@ Jquery
 commons-util为公共类库
 mockserver为web端
 在manager_platform下运行
-mvn clean package -Dmavek.test.skip=true -Dmaven.javadoc.skip=tru
+mvn clean package -Dmavek.test.skip=true -Dmaven.javadoc.skip=true
 
 ## 3. 设置数据库
 目前引用数据库为mysql，数据库为autotest_platform_mockserver，登陆账号和密码自行设置,已经设置好允许远程连接。
