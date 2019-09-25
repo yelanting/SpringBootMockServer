@@ -79,6 +79,14 @@
 		CONCAT(#{searchContent},'%')
 	</select>
 
+	<select id="searchMockApiByApplicationId"
+		parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_mock_api
+		where application_id=#{applicationId}
+	</select>
+
 	<select id="findAll" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />

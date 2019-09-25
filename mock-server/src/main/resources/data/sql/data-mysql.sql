@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `tb_mock_api`
    `application_id` int (8) NOT NULL COMMENT '关联应用ID',
    `api_name` varchar (100) NOT NULL COMMENT 'api名称',
    `api_path` varchar (100) DEFAULT NULL COMMENT 'api路径',
-   `api_params` varchar (100) DEFAULT NULL COMMENT '请求参数',
+   `api_params` varchar (20000) DEFAULT NULL COMMENT '请求参数',
    `request_method_type` varchar (100) DEFAULT NULL COMMENT '请求类型',
    `request_mime_type` varchar (100) DEFAULT NULL COMMENT '请求Mime类型',
    `expected_response` varchar (20000) DEFAULT NULL COMMENT '预期返回值',

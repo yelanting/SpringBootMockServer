@@ -22,7 +22,35 @@ layui.use([
 			return checkInputLength(val, null, 500, "参数描述")
 		},
 	});
-
+	
+	/**
+	 * 获取页面的id
+	 * 
+	 */
+	function getParentId() {
+		let searchContent = window.location.search;
+		let targetId = getValueOfKeyFromWindowLocationSearch("id" , searchContent);
+		return targetId;
+	}
+	
+	
+	/**
+	 * 渲染应用信息
+	 */
+	(function(){
+		/**
+		 * 如果是sftp的话，请求服务器信息刷新select
+		 */
+		let detail = getCurrentTableData(getParentId());
+		
+		if (!detail.data.applicationId) {
+			initApplicationInfoSelect();
+		}else{
+			initApplicationInfoSelectById(detail.data.applicationId);
+		}
+	})()
+	
+	
 	form.on("submit(editMockApiSubmit)", function(data) {
 		// 弹出loading
 		var index = top.layer.msg('数据提交中，请稍候', {

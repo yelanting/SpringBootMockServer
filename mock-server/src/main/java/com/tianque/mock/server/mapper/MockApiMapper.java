@@ -139,4 +139,15 @@ public interface MockApiMapper {
 	 * @return
 	 */
 	List<MockApi> findOtherMockApisByObject(MockApi mockApi);
+
+	/**
+	 * 根据应用id查询相关的api
+	 * 
+	 * @see :
+	 * @param :
+	 * @return : List<MockApi>
+	 * @param applicationId
+	 * @return
+	 */
+	List<MockApi> searchMockApiByApplicationId(Long applicationId);
 }

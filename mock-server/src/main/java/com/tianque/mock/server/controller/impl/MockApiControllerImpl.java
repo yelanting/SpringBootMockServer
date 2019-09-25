@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiResponses;
  * @see :
  */
 @Controller
-@Api("应用信息相关API")
+@Api("MockApi相关API")
 @RequestMapping("/mockApi")
 public class MockApiControllerImpl {
 	@Autowired
@@ -40,7 +40,7 @@ public class MockApiControllerImpl {
 
 	@GetMapping(value = "/getList")
 	@ResponseBody
-	@ApiOperation(value = "查询应用信息列表")
+	@ApiOperation(value = "查询MockApi列表")
 	@ApiResponses({ @ApiResponse(code = 400, message = "请求参数没有填好"),
 	        @ApiResponse(code = 404, message = "页面查找失败，路径不对") })
 	public ResponseData getList() {
@@ -59,7 +59,7 @@ public class MockApiControllerImpl {
 	 */
 	@GetMapping(value = "/searchList")
 	@ResponseBody
-	@ApiOperation(value = "根据key名称查询应用信息")
+	@ApiOperation(value = "根据key名称查询MockApi")
 	@ApiResponses({ @ApiResponse(code = 400, message = "请求参数没有填好"),
 	        @ApiResponse(code = 404, message = "页面查找失败，路径不对") })
 	public ResponseData searchList(
@@ -70,7 +70,7 @@ public class MockApiControllerImpl {
 	}
 
 	/**
-	 * 添加应用信息
+	 * 添加MockApi
 	 * 
 	 * @see :
 	 * @param :
@@ -78,7 +78,7 @@ public class MockApiControllerImpl {
 	 * @param mockApi
 	 */
 	@PostMapping(value = "/addMockApi")
-	@ApiOperation(value = "添加应用信息")
+	@ApiOperation(value = "添加MockApi")
 	@ResponseBody
 	public ResponseData addMockApi(@ModelAttribute MockApi mockApi) {
 		return ResponseData
@@ -86,7 +86,7 @@ public class MockApiControllerImpl {
 	}
 
 	/**
-	 * 更新应用信息
+	 * 更新MockApi
 	 * 
 	 * @see :
 	 * @param :
@@ -94,7 +94,7 @@ public class MockApiControllerImpl {
 	 * @param mockApi
 	 */
 	@PostMapping(value = "/updateMockApi")
-	@ApiOperation(value = "修改应用信息")
+	@ApiOperation(value = "修改MockApi")
 	@ResponseBody
 	public ResponseData updateMockApi(@ModelAttribute MockApi mockApi) {
 		return ResponseData
@@ -102,7 +102,7 @@ public class MockApiControllerImpl {
 	}
 
 	/**
-	 * 删除应用信息-单个
+	 * 删除MockApi-单个
 	 * 
 	 * @see :
 	 * @param :
@@ -110,14 +110,14 @@ public class MockApiControllerImpl {
 	 * @param id
 	 */
 	@PostMapping(value = "/deleteMockApi")
-	@ApiOperation(value = "删除应用信息")
+	@ApiOperation(value = "删除MockApi")
 	@ResponseBody
 	public ResponseData deleteMockApi(@RequestParam("id") Long id) {
 		return ResponseData.getSuccessResult(mockApiService.deleteMockApi(id));
 	}
 
 	/**
-	 * 批量删除应用信息
+	 * 批量删除MockApi
 	 * 
 	 * @see :
 	 * @param :
@@ -126,7 +126,7 @@ public class MockApiControllerImpl {
 	 * @return
 	 */
 	@PostMapping(value = "/deleteMockApiInBatch")
-	@ApiOperation(value = "批量删除应用信息")
+	@ApiOperation(value = "批量删除MockApi")
 	@ResponseBody
 	public ResponseData deleteMockApiInBatch(
 	        @RequestParam("ids[]") Long[] ids) {
@@ -148,5 +148,22 @@ public class MockApiControllerImpl {
 	public ResponseData getDetail(@PathVariable Long id) {
 		return ResponseData
 		        .getSuccessResult(mockApiService.selectByPrimaryKey(id));
+	}
+
+	/**
+	 * 获取详情
+	 * 
+	 * @see :
+	 * @param :
+	 * @return : ResponseData
+	 * @param codeCoverage
+	 */
+	@GetMapping(value = "/getList/{applicationId}")
+	@ApiOperation(value = "查询详情")
+	@ResponseBody
+	public ResponseData getListByApplicationId(
+	        @PathVariable Long applicationId) {
+		return ResponseData.getSuccessResult(
+		        mockApiService.searchMockApiByApplicationId(applicationId));
 	}
 }

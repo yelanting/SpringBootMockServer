@@ -186,4 +186,17 @@ public class MockApiServiceImpl implements MockApiService {
 	public MockApi findMockApiByAppEname(String 请求路径) {
 		return mockApiMapper.findMockApiByAppEname(请求路径);
 	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tianque.mock.server.service.MockApiService#searchMockApiByApplicationId(java.lang.Long)
+	 * @param applicationId
+	 * @return
+	 */
+	@Override
+	public List<MockApi> searchMockApiByApplicationId(Long applicationId) {
+		logger.debug("根据应用的id:{}查询相关联的api", applicationId);
+		return mockApiMapper.searchMockApiByApplicationId(applicationId);
+	}
 }

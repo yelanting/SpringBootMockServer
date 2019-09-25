@@ -1,28 +1,38 @@
 layui.use([
 		'form', 'layer', 'layedit', 'laydate', 'upload'
 ], function() {
-	var form = layui.form
-	layer = parent.layer === undefined ? layui.layer : top.layer,
-			laypage = layui.laypage, upload = layui.upload,
-			layedit = layui.layedit, laydate = layui.laydate, $ = layui.jquery;
-
+	var form = layui.form;
+	var layer = (parent.layer === undefined ? layui.layer : top.layer);
+	var	laypage = layui.laypage;
+	var upload = layui.upload;
+	var layedit = layui.layedit;
+	var laydate = layui.laydate;
+	var $ = layui.jquery;
+	
 	form.verify({
-		paramKey : function(val) {
-			var inputName = "参数Key"
+		apiName : function(val) {
+			var inputName = "接口名称"
 			return checkInputEmpty(val, inputName)
 					|| checkInputLength(val, null, 50, inputName)
 		},
 
-		paramValue : function(val) {
-			var inputName =  "参数值";
+		apiPath : function(val) {
+			var inputName =  "接口路径";
 			return checkInputEmpty(val, inputName) ||checkInputLength(val, null, 500,inputName)
 		},
 		
-		paramComment : function(val) {
-			return checkInputLength(val, null, 500, "参数描述")
+		apiParams : function(val) {
+			return checkInputLength(val, null, 500, "传入参数")
 		},
 	});
-
+	
+	/**
+	 * 渲染应用信息
+	 */
+	(function(){
+		initApplicationInfoSelect();
+	})()
+	
 	form.on("submit(addMockApiSubmit)", function(data) {
 		// 弹出loading
 		var index = top.layer.msg('数据提交中，请稍候', {

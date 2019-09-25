@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no">
-<title>全局参数列表</title>
+<title>MockApi列表</title>
 <link rel="stylesheet" href="/layui/css/layui.css" media="all">
 <link rel="stylesheet" href="listMockApi.css" media="all">
 <link rel="stylesheet" href="/css/public.css" media="all" />
@@ -20,7 +20,7 @@
 			<div class="layui-inline">
 				<div class="layui-input-inline">
 					<input id="serachMockApiContent" type="text"
-						class="layui-input searchVal" placeholder="请输入要搜索的参数key"
+						class="layui-input searchVal" placeholder="请输入要搜索的mockName或者path"
 						maxLength=50 />
 				</div>
 			</div>
@@ -42,8 +42,19 @@
 					class="layui-btn layui-btn-success layui-btn-normal refreshMockApiList"
 					lay-event="refreshMockApiList" lay-filter="refreshMockApiList">刷新</a>
 			</div>
+
+			<div class="layui-inline">
+				<label class="layui-form-label formItem-required" title="通过应用筛选">筛选</label>
+				<div class="layui-input-block layui-form">
+					<select class="layui-form" id="applicationId" name="applicationId"
+						lay-verify="required" lay-filter="applicationId" lay-search>
+					</select>
+				</div>
+			</div>
 		</form>
+
 	</blockquote>
+	
 	<table class="layui-hide" id="mockApiListTable"
 		lay-filter="mockApiListTable"></table>
 	<script type="text/html" id="operationBar">
@@ -53,6 +64,8 @@
         </script>
 	<script src="/layui/layui.js"></script>
 	<script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="../../CommonUtil.js"></script>
+	<script type="text/javascript" src="commonOperation.js"></script>
 	<script src="listMockApi.js"></script>
 </body>
 </html>
