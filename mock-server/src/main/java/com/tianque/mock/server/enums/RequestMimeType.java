@@ -14,5 +14,5 @@ package com.tianque.mock.server.enums;
  *      TODO(请说明这个类的作用).
  */
 public enum RequestMimeType {
-
+	JSON
 }

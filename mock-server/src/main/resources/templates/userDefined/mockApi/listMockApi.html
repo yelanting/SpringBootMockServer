@@ -20,7 +20,15 @@
 			<div class="layui-inline">
 				<div class="layui-input-inline">
 					<input id="serachMockApiContent" type="text"
-						class="layui-input searchVal" placeholder="请输入要搜索的mockName或者path"
+						class="layui-input searchVal" placeholder="请输入接口名或者Path"
+						maxLength=50 />
+				</div>
+			</div>
+
+			<div class="layui-inline">
+				<div class="layui-input-inline">
+					<input id="serachMockApiContentApp" type="text"
+						class="layui-input searchVal" placeholder="请输入应用名或者英文名"
 						maxLength=50 />
 				</div>
 			</div>
@@ -42,30 +50,28 @@
 					class="layui-btn layui-btn-success layui-btn-normal refreshMockApiList"
 					lay-event="refreshMockApiList" lay-filter="refreshMockApiList">刷新</a>
 			</div>
-
-			<div class="layui-inline">
-				<label class="layui-form-label formItem-required" title="通过应用筛选">筛选</label>
-				<div class="layui-input-block layui-form">
-					<select class="layui-form" id="applicationId" name="applicationId"
-						lay-verify="required" lay-filter="applicationId" lay-search>
-					</select>
-				</div>
-			</div>
 		</form>
 
 	</blockquote>
-	
+
 	<table class="layui-hide" id="mockApiListTable"
 		lay-filter="mockApiListTable"></table>
 	<script type="text/html" id="operationBar">
-  			<a id="detail" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
   			<a id="edit" class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
   			<a id="del" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+			<a id="copy" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="copy">复制</a>
         </script>
+	<script type="text/html" id="applicationName">
+		{{#  if(d.applicationId){ }}
+  			<span name="applicationName" >{{d.applicationInfo.appName}}</span>
+		{{#  } else{}}
+            <span name="applicationName" >暂无</span>
+        {{# } }}
+    </script>
 	<script src="/layui/layui.js"></script>
 	<script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="../../CommonUtil.js"></script>
-	<script type="text/javascript" src="commonOperation.js"></script>
+	<!-- 	<script type="text/javascript" src="commonOperation.js"></script> -->
 	<script src="listMockApi.js"></script>
 </body>
 </html>

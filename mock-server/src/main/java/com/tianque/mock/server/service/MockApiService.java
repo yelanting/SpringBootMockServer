@@ -59,15 +59,38 @@ public interface MockApiService {
 	List<MockApi> searchMockApisBySearchContent(String searchContent);
 
 	/**
-	 * 根据appEname查询
+	 * 根据app信息查询列表
 	 * 
 	 * @see :
 	 * @param :
 	 * @return : List<MockApi>
-	 * @param appEname
+	 * @param searchContent
 	 * @return
 	 */
-	MockApi findMockApiByAppEname(String appEname);
+	List<MockApi> searchMockApisBySearchContentAndAppInfo(String searchContent,
+	        String appInfo);
+
+	/**
+	 * 根据搜索内容查询列表
+	 * 
+	 * @see :
+	 * @param :
+	 * @return : List<MockApi>
+	 * @param searchContent
+	 * @return
+	 */
+	List<MockApi> searchMockApisWithAppInfo(String appInfo);
+
+	/**
+	 * 根据apiPath查询
+	 * 
+	 * @see :
+	 * @param :
+	 * @return : List<MockApi>
+	 * @param apiPath
+	 * @return
+	 */
+	MockApi findMockApiByApiPath(String apiPath);
 
 	/**
 	 * 单个删除
@@ -121,4 +144,15 @@ public interface MockApiService {
 	 * @return
 	 */
 	List<MockApi> searchMockApiByApplicationId(Long applicationId);
+
+	/**
+	 * 根据应用ids查询相关的api
+	 * 
+	 * @see :
+	 * @param :
+	 * @return : List<MockApi>
+	 * @param applicationId
+	 * @return
+	 */
+	List<MockApi> searchMockApiByApplicationIds(Long[] applicationIds);
 }

@@ -5,6 +5,7 @@
  */
 package com.tianque.mock.server.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 import com.tianque.commons.util.core.base.ValidationUtil;
 import com.tianque.commons.util.exception.base.BusinessValidationException;
 import com.tianque.mock.server.mapper.MockApiMapper;
+import com.tianque.mock.server.model.ApplicationInfo;
 import com.tianque.mock.server.model.MockApi;
+import com.tianque.mock.server.service.ApplicationInfoService;
 import com.tianque.mock.server.service.MockApiService;
 
 /**
@@ -34,6 +37,9 @@ public class MockApiServiceImpl implements MockApiService {
 	@Autowired
 	private MockApiMapper mockApiMapper;
 
+	@Autowired
+	private ApplicationInfoService applicationInfoService;
+
 	/**
 	 * @see 获取列表
 	 */
@@ -42,7 +48,7 @@ public class MockApiServiceImpl implements MockApiService {
 
 		List<MockApi> findAllList = mockApiMapper.findAll();
 		logger.debug("当前列表:{}", Arrays.asList(findAllList));
-		return findAllList;
+		return dealWithMockApis(findAllList);
 	}
 
 	/**
@@ -59,7 +65,7 @@ public class MockApiServiceImpl implements MockApiService {
 
 			int resultKey = mockApiMapper.insert(mockApi);
 			mockApi.setId(Long.valueOf(resultKey));
-			return mockApi;
+			return dealWithMockApi(mockApi);
 		} catch (Exception e) {
 			logger.error("添加接口Mock失败,错误信息:{}", e.getMessage());
 			throw new BusinessValidationException("添加接口Mock失败");
@@ -87,7 +93,7 @@ public class MockApiServiceImpl implements MockApiService {
 		try {
 
 			this.mockApiMapper.updateByPrimaryKey(mockApi);
-			return mockApi;
+			return dealWithMockApi(mockApi);
 		} catch (Exception e) {
 			throw new BusinessValidationException("修改失败");
 		}
@@ -101,7 +107,8 @@ public class MockApiServiceImpl implements MockApiService {
 	public List<MockApi> searchMockApisBySearchContent(String searchContent) {
 		logger.debug("根据:{}查询列表", searchContent);
 
-		return mockApiMapper.findMockApisByAppEnameOrNameLike(searchContent);
+		return dealWithMockApis(
+		        mockApiMapper.findMockApisByApiPathOrNameLike(searchContent));
 	}
 
 	/**
@@ -134,7 +141,7 @@ public class MockApiServiceImpl implements MockApiService {
 	public MockApi selectByPrimaryKey(Long id) {
 		logger.info("根据主键查询");
 		ValidationUtil.validateNull(id, null);
-		return mockApiMapper.selectByPrimaryKey(id);
+		return dealWithMockApi(mockApiMapper.selectByPrimaryKey(id));
 	}
 
 	/**
@@ -144,7 +151,7 @@ public class MockApiServiceImpl implements MockApiService {
 	 */
 	@Override
 	public MockApi selectByObject(MockApi mockApi) {
-		return selectByPrimaryKey(mockApi.getId());
+		return dealWithMockApi(selectByPrimaryKey(mockApi.getId()));
 	}
 
 	/**
@@ -183,8 +190,9 @@ public class MockApiServiceImpl implements MockApiService {
 	 *      findMockApiByAppEname(java.lang.String)
 	 */
 	@Override
-	public MockApi findMockApiByAppEname(String 请求路径) {
-		return mockApiMapper.findMockApiByAppEname(请求路径);
+	public MockApi findMockApiByApiPath(String apiPath) {
+		logger.debug("根据apiPath查询MockApi:[{}]", apiPath);
+		return dealWithMockApi(mockApiMapper.findMockApiByApiPath(apiPath));
 	}
 
 	/**
@@ -197,6 +205,150 @@ public class MockApiServiceImpl implements MockApiService {
 	@Override
 	public List<MockApi> searchMockApiByApplicationId(Long applicationId) {
 		logger.debug("根据应用的id:{}查询相关联的api", applicationId);
-		return mockApiMapper.searchMockApiByApplicationId(applicationId);
+		return dealWithMockApis(
+		        mockApiMapper.searchMockApiByApplicationId(applicationId));
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tianque.mock.server.service.MockApiService#searchMockApisBySearchContentAndAppInfo(java.lang.String,
+	 *      java.lang.String)
+	 * @param searchContent
+	 * @param appInfo
+	 * @return
+	 */
+	@Override
+	public List<MockApi> searchMockApisBySearchContentAndAppInfo(
+	        String searchContent, String appInfo) {
+		logger.debug("根据Api内容:[{}]和app信息搜索:[{}]", searchContent, appInfo);
+		Long[] applicationIds = getApplicationIdsOfSearchContent(appInfo);
+
+		if (applicationIds.length == 0) {
+			return new ArrayList<>();
+		}
+
+		return dealWithMockApis(
+		        mockApiMapper.searchMockApiBySearchContentInApplicationIds(
+		                searchContent, applicationIds));
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tianque.mock.server.service.MockApiService#searchMockApisWithAppInfo(java.lang.String)
+	 * @param searchContent
+	 * @return
+	 */
+	@Override
+	public List<MockApi> searchMockApisWithAppInfo(String searchContent) {
+		Long[] applicationIds = getApplicationIdsOfSearchContent(searchContent);
+		return searchMockApiByApplicationIds(applicationIds);
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tianque.mock.server.service.MockApiService#searchMockApiByApplicationIds(java.lang.Long[])
+	 * @param applicationIds
+	 * @return
+	 */
+	@Override
+	public List<MockApi> searchMockApiByApplicationIds(Long[] applicationIds) {
+		logger.debug("根据多个应用id信息:{}查询关联的mockapi",
+		        Arrays.asList(applicationIds));
+
+		if (applicationIds.length == 0) {
+			return new ArrayList<>();
+		}
+
+		List<MockApi> currentMockApiList = mockApiMapper
+		        .searchMockApiByApplicationIds(applicationIds);
+
+		return dealWithMockApis(currentMockApiList);
+	}
+
+	/**
+	 * 根据模糊查询的结果，拿到id数组
+	 * 
+	 * @see :
+	 * @param :
+	 * @return : Long[]
+	 * @return
+	 */
+	private Long[] getApplicationIdsOfSearchContent(String appSearchContent) {
+		List<ApplicationInfo> applicationInfos = applicationInfoService
+		        .searchApplicationInfosBySearchContent(appSearchContent);
+
+		if (applicationInfos.isEmpty()) {
+			return new Long[] {};
+		}
+
+		Long[] applicationIds = new Long[applicationInfos.size()];
+
+		for (int i = 0; i < applicationInfos.size(); i++) {
+			applicationIds[i] = applicationInfos.get(i).getId();
+		}
+		return applicationIds;
+	}
+
+	/**
+	 * 根据id拿到app
+	 * 
+	 * @see :
+	 * @param :
+	 * @return : Long[]
+	 * @return
+	 */
+	private ApplicationInfo getApplicationInfoById(Long applicationInfoId) {
+		return applicationInfoService.selectByPrimaryKey(applicationInfoId);
+	}
+
+	/**
+	 * 处理返回的MockApi列表
+	 * 
+	 * @see :
+	 * @param :
+	 * @return : List<MockApi>
+	 * @param mockApis
+	 * @return
+	 */
+	private List<MockApi> dealWithMockApis(final List<MockApi> mockApis) {
+
+		List<ApplicationInfo> applicationInfos = new ArrayList<>();
+		List<Long> applicationIds = new ArrayList<>();
+
+		for (MockApi mockApi : mockApis) {
+			// 如果没有查到过，则查一下放进去
+			if (!applicationIds.contains(mockApi.getApplicationId())) {
+				ApplicationInfo applicationInfo = getApplicationInfoById(
+				        mockApi.getApplicationId());
+				applicationInfos.add(applicationInfo);
+				applicationIds.add(mockApi.getApplicationId());
+				mockApi.setApplicationInfo(applicationInfo);
+			} else {
+				mockApi.setApplicationInfo(applicationInfos.get(
+				        applicationIds.indexOf(mockApi.getApplicationId())));
+			}
+		}
+
+		return mockApis;
+	}
+
+	/**
+	 * 处理返回的MockApi
+	 * 
+	 * @see :
+	 * @param :
+	 * @return : MockApi
+	 * @return
+	 */
+	private MockApi dealWithMockApi(final MockApi mockApi) {
+
+		if (null != mockApi && null != mockApi.getApplicationId()) {
+			mockApi.setApplicationInfo(
+			        getApplicationInfoById(mockApi.getApplicationId()));
+		}
+		return mockApi;
 	}
 }

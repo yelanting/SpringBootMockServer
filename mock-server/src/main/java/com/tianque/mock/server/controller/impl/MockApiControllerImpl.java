@@ -70,6 +70,50 @@ public class MockApiControllerImpl {
 	}
 
 	/**
+	 * 根据项目名称查询
+	 * 
+	 * @see :
+	 * @param :
+	 * @return : ResponseData
+	 * @param searchContent
+	 * @return
+	 */
+	@GetMapping(value = "/searchListWithAppInfo")
+	@ResponseBody
+	@ApiOperation(value = "根据应用信息查询MockApi")
+	@ApiResponses({ @ApiResponse(code = 400, message = "请求参数没有填好"),
+	        @ApiResponse(code = 404, message = "页面查找失败，路径不对") })
+	public ResponseData searchListWithAppInfo(
+	        @RequestParam("searchContent") String searchContent) {
+		List<MockApi> mockApiPage = mockApiService
+		        .searchMockApisWithAppInfo(searchContent);
+		return ResponseData.getSuccessResult(mockApiPage, mockApiPage.size());
+	}
+
+	/**
+	 * 根据项目名称查询
+	 * 
+	 * @see :
+	 * @param :
+	 * @return : ResponseData
+	 * @param searchContent
+	 * @return
+	 */
+	@GetMapping(value = "/searchListWithConditionAndAppInfo")
+	@ResponseBody
+	@ApiOperation(value = "根据应用信息查询MockApi")
+	@ApiResponses({ @ApiResponse(code = 400, message = "请求参数没有填好"),
+	        @ApiResponse(code = 404, message = "页面查找失败，路径不对") })
+	public ResponseData searchListWithConditionAndAppInfo(
+	        @RequestParam("searchContent") String searchContent,
+	        @RequestParam("appInfo") String appInfo) {
+		List<MockApi> mockApiPage = mockApiService
+		        .searchMockApisBySearchContentAndAppInfo(searchContent,
+		                appInfo);
+		return ResponseData.getSuccessResult(mockApiPage, mockApiPage.size());
+	}
+
+	/**
 	 * 添加MockApi
 	 * 
 	 * @see :

@@ -219,7 +219,7 @@ layui.use(['laypage', 'layer', 'table', 'element', 'form'], function () {
 			last: "尾页",
 			//每页条数的选择项
 			limits: [5, 10, 20, 30, 40, 50, 100],
-			limit: 5,
+			limit: 50,
 			groups: 3,
 			skin: '#1E9FFF',
 			// 自定义选中色值

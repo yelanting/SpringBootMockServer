@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tianque.mock.server.mapper.MockApiMapper">
-	<resultMap id="BaseResultMap"
+	<resultMap id="MockApiBaseResultMap"
 		type="com.tianque.mock.server.model.MockApi">
 		<id column="id" jdbcType="BIGINT" javaType="java.lang.Long"
 			property="id" />
+		<id column="application_id" jdbcType="BIGINT"
+			javaType="java.lang.Long" property="applicationId" />
 		<result column="api_name" jdbcType="VARCHAR" property="apiName" />
 		<result column="api_path" jdbcType="VARCHAR" property="apiPath" />
 		<result column="api_params" jdbcType="VARCHAR"
@@ -27,6 +29,7 @@
 		api_name,
 		api_path,
 		api_params,
+		application_id,
 		request_method_type,
 		request_mime_type,
 		expected_response,
@@ -35,7 +38,7 @@
 		update_date
 	</sql>
 	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
-		resultMap="BaseResultMap">
+		resultMap="MockApiBaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from tb_mock_api
@@ -43,15 +46,15 @@
 	</select>
 
 	<select id="findMockApiByApiPath"
-		parameterType="java.lang.String" resultMap="BaseResultMap">
+		parameterType="java.lang.String" resultMap="MockApiBaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from tb_mock_api
-		where api_name = #{apiName}
+		where api_path = #{apiPath}
 	</select>
 	<select id="findOtherMockApisByObject"
 		parameterType="com.tianque.mock.server.model.MockApi"
-		resultMap="BaseResultMap">
+		resultMap="MockApiBaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from tb_mock_api
@@ -60,7 +63,7 @@
 	</select>
 
 	<select id="findMockApisByApiPathLike"
-		parameterType="java.lang.String" resultMap="BaseResultMap">
+		parameterType="java.lang.String" resultMap="MockApiBaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from tb_mock_api
@@ -69,7 +72,7 @@
 	</select>
 
 	<select id="findMockApisByApiPathOrNameLike"
-		parameterType="java.lang.String" resultMap="BaseResultMap">
+		parameterType="java.lang.String" resultMap="MockApiBaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from tb_mock_api
@@ -79,15 +82,43 @@
 		CONCAT(#{searchContent},'%')
 	</select>
 
+	<select id="searchMockApiBySearchContentInApplicationIds"
+		resultMap="MockApiBaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_mock_api
+		where api_name like
+		CONCAT(#{searchContent},'%') or
+		api_path like
+		CONCAT(#{searchContent},'%')
+		having application_id in
+		<foreach item="id" collection="applicationIds" open="("
+			separator="," close=")">
+			#{id,jdbcType=BIGINT}
+		</foreach>
+	</select>
+
+	<select id="searchMockApiByApplicationIds"
+		resultMap="MockApiBaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_mock_api
+		where application_id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id,jdbcType=BIGINT}
+		</foreach>
+	</select>
+
 	<select id="searchMockApiByApplicationId"
-		parameterType="java.lang.String" resultMap="BaseResultMap">
+		parameterType="java.lang.String" resultMap="MockApiBaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from tb_mock_api
 		where application_id=#{applicationId}
 	</select>
 
-	<select id="findAll" resultMap="BaseResultMap">
+	<select id="findAll" resultMap="MockApiBaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from tb_mock_api
@@ -122,6 +153,8 @@
 			</if>
 			description =
 			#{description,jdbcType=VARCHAR},
+			application_id =
+			#{applicationId,jdbcType=VARCHAR},
 			api_params =
 			#{apiParams,jdbcType=VARCHAR},
 			request_mime_type=
@@ -140,10 +173,12 @@
 			LAST_INSERT_ID()
 		</selectKey>
 		insert into tb_mock_api ( api_name,
-		request_method_type,request_mime_type
+		request_method_type,
+		request_mime_type,
 		description,
 		api_path,
 		api_params,
+		application_id,
 		expected_response,
 		create_date, update_date ) values
 		(#{apiName,jdbcType=VARCHAR},
@@ -152,8 +187,11 @@
 		#{description,jdbcType=VARCHAR},
 		#{apiPath,jdbcType=VARCHAR},
 		#{apiParams ,jdbcType=VARCHAR},
-		#{expectedResponse ,jdbcType=VARCHAR},
+		#{applicationId,jdbcType=VARCHAR},
+		#{expectedResponse
+		,jdbcType=VARCHAR},
 		CURRENT_TIMESTAMP(),
-		#{updateDate,jdbcType=VARCHAR} )
+		#{updateDate,jdbcType=VARCHAR}
+		)
 	</insert>
 </mapper>

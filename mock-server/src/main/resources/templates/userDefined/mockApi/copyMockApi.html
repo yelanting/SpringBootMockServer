@@ -14,15 +14,8 @@
 <link rel="stylesheet" href="/css/public.css" media="all" />
 </head>
 <body>
-	<form id="editMockApiForm" class="layui-form layui-form-pane"
-		method="post" lay-filter="editMockApiForm">
-		<div class="layui-form-item" style="display: none">
-			<label class="layui-form-label">ID</label>
-			<div class="layui-input-block">
-				<input type="text" id="id" name="id" class="layui-input id"
-					lay-verify="id" maxLength=50 readonly="readonly">
-			</div>
-		</div>
+	<form id="copyMockApiForm" class="layui-form layui-form-pane"
+		method="post" lay-filter="copyMockApiForm">
 		<div class="layui-form-item">
 			<label class="layui-form-label">名称</label>
 			<div class="layui-input-block">
@@ -105,9 +98,9 @@
 		</div>
 		<div class="layui-form-item">
 			<div class="layui-input-block">
-				<button id="editMockApiSubmit" class="layui-btn" lay-submit=""
-					lay-filter="editMockApiSubmit">立即提交</button>
-				<button id="editReset" type="reset" style="display: none"
+				<button id="copyMockApiSubmit" class="layui-btn" lay-submit=""
+					lay-filter="copyMockApiSubmit">立即提交</button>
+				<button id="copyReset" type="reset" style="display: none"
 					class="layui-btn layui-btn-primary">重置</button>
 			</div>
 		</div>
@@ -117,6 +110,6 @@
 	<script type="text/javascript" src="../../commonCheck.js"></script>
 	<script type="text/javascript" src="../../CommonUtil.js"></script>
 	<script type="text/javascript" src="commonOperation.js"></script>
-	<script type="text/javascript" src="editMockApi.js"></script>
+	<script type="text/javascript" src="copyMockApi.js"></script>
 </body>
 </html>

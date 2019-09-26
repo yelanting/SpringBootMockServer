@@ -13,5 +13,5 @@ package com.tianque.mock.server.enums;
  * @see :
  */
 public enum RequestMethodType {
-
+	POST, GET, PUT, DELETE, PATCH, TRACE, HEAD, OPTIONS
 }

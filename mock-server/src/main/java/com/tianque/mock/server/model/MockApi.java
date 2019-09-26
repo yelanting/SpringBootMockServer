@@ -43,7 +43,12 @@ public class MockApi extends BaseDomain {
 	// 请求mime类型
 	private RequestMimeType requestMimeType;
 	// 期待返回数据
-	private Object expectedResonse;
+	private Object expectedResponse;
+
+	/**
+	 * 非数据库字段
+	 */
+	private ApplicationInfo applicationInfo;
 
 	/**
 	 * @return the apiName
@@ -136,18 +141,18 @@ public class MockApi extends BaseDomain {
 	}
 
 	/**
-	 * @return the expectedResonse
+	 * @return the expectedResponse
 	 */
-	public Object getExpectedResonse() {
-		return expectedResonse;
+	public Object getExpectedResponse() {
+		return expectedResponse;
 	}
 
 	/**
-	 * @param expectedResonse
-	 *            the expectedResonse to set
+	 * @param expectedResponse
+	 *            the expectedResponse to set
 	 */
-	public void setExpectedResonse(Object expectedResonse) {
-		this.expectedResonse = expectedResonse;
+	public void setExpectedResponse(Object expectedResponse) {
+		this.expectedResponse = expectedResponse;
 	}
 
 	/**
@@ -161,8 +166,24 @@ public class MockApi extends BaseDomain {
 		return "MockApi [apiName=" + apiName + ", apiPath=" + apiPath
 		        + ", applicationId=" + applicationId + ", apiParams="
 		        + apiParams + ", requestMethodType=" + requestMethodType
-		        + ", requestMimeType=" + requestMimeType + ", expectedResonse="
-		        + expectedResonse + "]";
+		        + ", requestMimeType=" + requestMimeType + ", expectedResponse="
+		        + expectedResponse + ", applicationInfo=" + applicationInfo
+		        + "]";
+	}
+
+	/**
+	 * @return the applicationInfo
+	 */
+	public ApplicationInfo getApplicationInfo() {
+		return applicationInfo;
+	}
+
+	/**
+	 * @param applicationInfo
+	 *            the applicationInfo to set
+	 */
+	public void setApplicationInfo(ApplicationInfo applicationInfo) {
+		this.applicationInfo = applicationInfo;
 	}
 
 }

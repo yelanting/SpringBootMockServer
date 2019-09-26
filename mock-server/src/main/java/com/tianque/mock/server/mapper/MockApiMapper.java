@@ -8,6 +8,7 @@ package com.tianque.mock.server.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.tianque.mock.server.model.MockApi;
 
@@ -97,7 +98,7 @@ public interface MockApiMapper {
 	MockApi selectByObject(MockApi record);
 
 	/**
-	 * 根据key查询列表-模糊
+	 * 根据App的名称或者英文名查询-模糊
 	 * 
 	 * @see :
 	 * @param :
@@ -105,18 +106,7 @@ public interface MockApiMapper {
 	 * @param searchContent
 	 * @return
 	 */
-	List<MockApi> findMockApisByAppEnameOrNameLike(String searchContent);
-
-	/**
-	 * 根据key查询列表-模糊
-	 * 
-	 * @see :
-	 * @param :
-	 * @return : List<MockApi>
-	 * @param searchContent
-	 * @return
-	 */
-	List<MockApi> findMockApisByAppNameLike(String searchContent);
+	List<MockApi> findMockApisByApiPathOrNameLike(String searchContent);
 
 	/**
 	 * 根据主键查询，精确
@@ -124,10 +114,10 @@ public interface MockApiMapper {
 	 * @see :
 	 * @param :
 	 * @return : MockApi
-	 * @param appEname
+	 * @param apiPath
 	 * @return
 	 */
-	MockApi findMockApiByAppEname(String appEname);
+	MockApi findMockApiByApiPath(String apiPath);
 
 	/**
 	 * 查询非当前实体列表
@@ -150,4 +140,28 @@ public interface MockApiMapper {
 	 * @return
 	 */
 	List<MockApi> searchMockApiByApplicationId(Long applicationId);
+
+	/**
+	 * 根据应用id查询相关的api
+	 * 
+	 * @see :
+	 * @param :
+	 * @return : List<MockApi>
+	 * @param applicationId
+	 * @return
+	 */
+	List<MockApi> searchMockApiByApplicationIds(Long[] applicationIds);
+
+	/**
+	 * 在指定的应用列表里模糊查询api
+	 * 
+	 * @see :
+	 * @param :
+	 * @return : List<MockApi>
+	 * @param applicationIds
+	 * @return
+	 */
+	List<MockApi> searchMockApiBySearchContentInApplicationIds(
+	        @Param("searchContent") String searchContent,
+	        @Param("applicationIds") Long[] applicationIds);
 }

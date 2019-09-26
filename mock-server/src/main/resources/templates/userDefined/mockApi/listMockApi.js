@@ -35,18 +35,6 @@ layui.use([ 'laypage', 'layer', 'table', 'element', 'form' ], function() {
 		return resultData;
 	}
 
-	(function() {
-		initApplicationInfoSelect();
-		$("#applicationId").change(function(){
-			
-			consolg.log(123);
-			let selected = $(this).children('option:selected').val();
-			
-			console.log(selected);
-			
-		});
-	})()
-
 	/**
 	 * 条件搜索
 	 */
@@ -57,6 +45,50 @@ layui.use([ 'laypage', 'layer', 'table', 'element', 'form' ], function() {
 			var resultData = "", postData = {};
 			$.ajax({
 				url : "/mockApi/searchList?searchContent=" + searchContent,
+				method : "get",
+				data : postData,
+				async : false,
+				dataType : "json",
+				success : function(result) {
+					resultData = result;
+				}
+			});
+			return resultData;
+		}
+	}
+	
+	/**
+	 * 根据应用信息搜索
+	 */
+	function getMockApiListWithAppInfo(searchContent) {
+		if (searchContent == "undefined" || searchContent == "") {
+			return getMockApiList();
+		} else {
+			var resultData = "", postData = {};
+			$.ajax({
+				url : "/mockApi/searchListWithAppInfo?searchContent=" + searchContent,
+				method : "get",
+				data : postData,
+				async : false,
+				dataType : "json",
+				success : function(result) {
+					resultData = result;
+				}
+			});
+			return resultData;
+		}
+	}
+	
+	/**
+	 * 根据应用信息搜索该应用下的信息
+	 */
+	function getMockApiListWithConditionAndAppInfo(searchContent , appInfo) {
+		if (searchContent == "undefined" || searchContent == "") {
+			return getMockApiList();
+		} else {
+			var resultData = "", postData = {};
+			$.ajax({
+				url : "/mockApi/searchListWithConditionAndAppInfo?searchContent=" + searchContent + "&appInfo=" + appInfo,
 				method : "get",
 				data : postData,
 				async : false,
@@ -81,6 +113,9 @@ layui.use([ 'laypage', 'layer', 'table', 'element', 'form' ], function() {
 			},
 			data : mockApiListData.data
 		})
+		
+		$("#serachMockApiContent").val("");
+		$("#serachMockApiContentApp").val("");
 	}
 
 	// 执行一个 table 实例
@@ -88,17 +123,15 @@ layui.use([ 'laypage', 'layer', 'table', 'element', 'form' ], function() {
 		elem : '#mockApiListTable',
 		height : 400,
 		// 数据接口
-		// url : "/mockApi/getList/",
-		// method:"get",
 		// 表头
 		title : 'MockApi列表',
 		// 开启工具栏，此处显示默认图标，可以自定义模板，详见文档
 		toolbar : true,
-		defaultToolbar : [ 'filter', 'exports', 'print' ],
+		defaultToolbar : [ 'filter', 'exports' ],
 		// 是否显示加载条
 		loading : true,
 		// 默认排序
-		initSort : "paramKey",
+		initSort : "apiName",
 		even : true,
 		// 最窄宽度
 		// cellMinWidth: 60,
@@ -112,7 +145,7 @@ layui.use([ 'laypage', 'layer', 'table', 'element', 'form' ], function() {
 			last : "尾页",
 			// 每页条数的选择项
 			limits : [ 5, 10, 20, 30, 40, 50, 100 ],
-			limit : 5,
+			limit : 50,
 			groups : 3,
 			skin : '#1E9FFF',
 			// 自定义选中色值
@@ -142,6 +175,11 @@ layui.use([ 'laypage', 'layer', 'table', 'element', 'form' ], function() {
 			sort : true,
 		// width: 220
 		}, {
+			field : 'applicationId',
+			title : '所属应用',
+			sort : true,
+			templet: "#applicationName"
+		},{
 			field : 'apiParams',
 			title : '接口参数',
 		// width: 220
@@ -154,7 +192,7 @@ layui.use([ 'laypage', 'layer', 'table', 'element', 'form' ], function() {
 			align : 'center',
 			title : '操作',
 			toolbar : '#operationBar',
-			width : '40%'
+			width : '30%'
 		} ] ],
 		data : getMockApiList().data
 	});
@@ -218,25 +256,60 @@ layui.use([ 'laypage', 'layer', 'table', 'element', 'form' ], function() {
 			}
 		});
 	}
+	
+	// 复制MockApi
+	function copyMockApi(edit) {
+//		let copySuffix = "_copy";
+//		let copySuffixChinese = "_复制";
+		layui.layer.open({
+			title : "复制MockApi",
+			type : 2,
+			area : [ widthPercent, heightPercent ],
+			content : "copyMockApi.html?id=" + edit.id,
+			success : function(layero, index) {
+//				var body = layui.layer.getChildFrame('body', index);
+//				body.find("#apiName").val(edit.apiName + copySuffixChinese);
+//				body.find("#apiPath").val(edit.apiPath + copySuffix)
+//				body.find("#apiParams").val(edit.apiParams);
+//				body.find("#createDate").val(edit.createDate);
+//				body.find("#updateDate").val(edit.updateDate);
+//				body.find("#requestMethodType").val(edit.requestMethodType);
+//				body.find("#requestMimeType").val(edit.requestMimeType);
+//				body.find("#applicationId").val(edit.applicationId);
+//				body.find("#expectedResponse").val(edit.expectedResponse);
+//				body.find("#description").val(edit.description);
+//				form.render();
+				setTimeout(function() {
+					layui.layer.tips('点击此处返回列表',
+							'.layui-layer-setwin .layui-layer-close', {
+								tips : 3
+							});
+				}, 500)
+			}
+		});
+	}
 
 	// 编辑MockApi
 	function editMockApi(edit) {
-		console.log(edit)
 		layui.layer.open({
 			title : "修改MockApi",
 			type : 2,
 			area : [ widthPercent, heightPercent ],
-			content : "editMockApi.html",
+			content : "editMockApi.html?id=" + edit.id,
 			success : function(layero, index) {
-				var body = layui.layer.getChildFrame('body', index);
-				body.find("#id").val(edit.id);
-				body.find("#paramKey").val(edit.paramKey);
-				body.find("#paramValue").val(edit.paramValue)
-				body.find("#paramComment").val(edit.paramComment);
-				body.find("#createDate").val(edit.createDate);
-				body.find("#updateDate").val(edit.updateDate);
-
-				form.render();
+//				var body = layui.layer.getChildFrame('body', index);
+//				body.find("#id").val(edit.id);
+//				body.find("#apiName").val(edit.apiName);
+//				body.find("#apiPath").val(edit.apiPath)
+//				body.find("#apiParams").val(edit.apiParams);
+//				body.find("#createDate").val(edit.createDate);
+//				body.find("#updateDate").val(edit.updateDate);
+//				body.find("#requestMethodType").val(edit.requestMethodType);
+//				body.find("#requestMimeType").val(edit.requestMimeType);
+//				body.find("#applicationId").val(edit.applicationId);
+//				body.find("#expectedResponse").val(edit.expectedResponse);
+//				body.find("#description").val(edit.description);
+//				form.render();
 				setTimeout(function() {
 					layui.layer.tips('点击此处返回列表',
 							'.layui-layer-setwin .layui-layer-close', {
@@ -257,11 +330,16 @@ layui.use([ 'laypage', 'layer', 'table', 'element', 'form' ], function() {
 			success : function(layero, index) {
 				var body = layui.layer.getChildFrame('body', index);
 				body.find("#id").val(edit.id);
-				body.find("#paramKey").val(edit.paramKey);
-				body.find("#paramValue").val(edit.paramValue)
-				body.find("#paramComment").val(edit.paramComment);
+				body.find("#apiName").val(edit.apiName);
+				body.find("#apiPath").val(edit.apiPath)
+				body.find("#apiParams").val(edit.apiParams);
 				body.find("#createDate").val(edit.createDate);
 				body.find("#updateDate").val(edit.updateDate);
+				body.find("#requestMethodType").val(edit.requestMethodType);
+				body.find("#requestMimeType").val(edit.requestMimeType);
+				body.find("#applicationId").val(edit.applicationInfo.appName);
+				body.find("#expectedResponse").val(edit.expectedResponse);
+				body.find("#description").val(edit.description);
 				form.render();
 				setTimeout(function() {
 					layui.layer.tips('点击此处返回列表',
@@ -279,10 +357,24 @@ layui.use([ 'laypage', 'layer', 'table', 'element', 'form' ], function() {
 
 	// 搜索MockApi
 	$("#searchMockApi").on("click", function() {
-		var searchContent = $("#serachMockApiContent").val();
-		var mockApiListData = getMockApiListWithCondition(searchContent);
+		var searchContent = $("#serachMockApiContent").val().trim();
+		var searchContentOfApp = $("#serachMockApiContentApp").val().trim();
+		
+		//如果两个只有一个有内容，则单个搜索
+		//如果两个都有内容，则组合搜索
+		var mockApiListData = [];
+		
+		if(searchContent && searchContentOfApp){
+			mockApiListData = getMockApiListWithConditionAndAppInfo(searchContent,searchContentOfApp);	
+		}else if (searchContent){
+			mockApiListData = getMockApiListWithCondition(searchContent);	
+		}else if(searchContentOfApp){
+			mockApiListData = getMockApiListWithAppInfo(searchContentOfApp);	
+		}else{
+			mockApiListData = getMockApiListWithCondition("");
+		}
+		 
 		// 搜索完之后清空搜索数据
-		$("#serachMockApiContent").val("")
 		// 表格重载
 		table.reload("mockApiListTable", {
 			data : mockApiListData.data
@@ -307,9 +399,7 @@ layui.use([ 'laypage', 'layer', 'table', 'element', 'form' ], function() {
 
 		console.log(obj);
 		// 获得 lay-event 对应的值
-		if (layEvent === 'detail') {
-			viewMockApi(data);
-		} else if (layEvent === 'del') {
+		if (layEvent === 'del') {
 			layer.confirm('真的删除行么', function(index) {
 				var url = "/mockApi/deleteMockApi";
 				var postData = {
@@ -332,6 +422,8 @@ layui.use([ 'laypage', 'layer', 'table', 'element', 'form' ], function() {
 			});
 		} else if (layEvent === 'edit') {
 			editMockApi(data);
+		}else if (layEvent === 'copy') {
+			copyMockApi(data);
 		}
 	});
 
