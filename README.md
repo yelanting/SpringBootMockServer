@@ -54,5 +54,78 @@ ls
 可以查看当前日志，最新的日志为springboot.log
    另外，跟logs同级的还有个my-tomcat目录，其下的logs文件夹下，存放了access日志，就是在网页中方位的url记录
 
+## 6. 使用方式简介
+
+目前实现了一个简易系统，主要针对Http调用的Mock，还未很详细
+
+界面介绍如下，目前主要功能有两个，一个管理应用，一个管理Api：
+![主要界面介绍](./readMeFiles/mainFormFunction.png)
+
+### 6.1 主界面目前包含应用管理和mockApi管理
+
+应用管理，是管理第三方应用信息的，里面有个默认的应用
+
+### 6.2 MockApi管理
+
+* 支持根据Api信息搜索
+* 支持根据应用信息搜索
+* 支持Api复制
+
+## 7. 调用方式
+
+假设有个第三方系统 thirdParty
+主调用url为：http://thirdParty.com/thirdParty
+
+假设你的系统调用第三方时，可能访问以下几个Url:
+http://thirdParty.com/thirdParty/users/getUserList
+http://thirdParty.com/thirdParty/users/getUserById
+但是测试环境与这个第三方系统不通，那么你可以把你的第三方对接Url,然后调用流程改成如下方式:
+### 7.1  修改主调用Url信息
+先建一个应用，比如中文名[第三方系统],英文名为：[thirdParty]
+那么你的主调用Url可以改成,比如http://localhost:8029/apiCallGateway/callApi/thirdParty/
+那么你对另两个Url的调用就会变成:
+http://localhost:8029/apiCallGateway/thirdParty/users/getUserList
+http://localhost:8029/apiCallGateway/thirdParty/users/getUserById
+
+### 7.2 新建两个MockApi
+
+接口路径分别是: /users/getUserList /users/getUserById
+再根据实际需求，填写接口参数和预期返回
+这样你的系统与第三方系统的对接发出的请求，就会按照你配置的这个接口返回来返回信息，调试自己的系统就行了
+
+### 7.3 调用方式
+
+mock的调用方式为:
+
+```java
+@RestController("apiCallController")
+@RequestMapping("/apiCallGateway")
+@Api("Mock调用相关Api")
+public class ApiCallControllerImpl {
+
+	private static final Logger LOGGER = LoggerFactory
+	        .getLogger(ApiCallControllerImpl.class);
+
+	@Autowired
+	private ApiCallGatewayService apiCallGatewayService;
+
+	@RequestMapping("/callApi/{applicationEname}/{requestMappingPath}/**")
+	public Object callApi(
+	        @PathVariable("applicationEname") String applicationEname,
+	        @PathVariable("requestMappingPath") String requestMappingPath,
+	        HttpServletRequest httpServletRequest) {
+
+```
+
+调用url为：
+http://localhost:8029/apiCallGateway/callApi/thirdParty/{你的应用ename}/{你的请求映射地址}
+
+### 7.4 缺陷和畅想
+
+* 将来会支持可以传递一个json，可以对一个应用下面的请求做统一处理
+* 将来会根据不同的请求参数，可配置型选择接入到不同的返回值，目前针对同一个接口请求，只能修改返回值，而不能动态
+* 待定...
+
+
 
 
